@@ -57,6 +57,10 @@
 			return new Artist(name);
 		};
 		
+		this.song = function(name) {
+			return new Song(name);
+		};
+		
 		/**
 		 * Used to handle a response back from the api. Will throw errors if a problem is detected.
 		 */
@@ -104,6 +108,7 @@
 					url: url() + options.endPoint,
 					dataType: 'jsonp',
 					type: options.type,
+					traditional: true,
 					data: data,
 					success: function(data, textStatus, XMLHttpRequest) {
 						if (options.success) { options.success(new Response(data)) }
@@ -311,6 +316,40 @@
 					callback( new VideoCollection( response.getData() ) );
 				});
 			}
+		/**
+		 * Song class. Created by passing in a string identifier for the song.
+		 */
+		var Song = function(name) {
+			this.name = name;
+			this.endPoint = 'song/'
+		};
+			/**
+			 * Get the new about an artist
+			 * @returns A collection object.
+			 */
+			Song.prototype.profile = function(callback, options) {
+				var request = new Request(options, {id: this.name});
+				request.get(this.endPoint + 'profile', function(response) {
+					callback( new SongsCollection( response.getData() ) );
+				});
+			}
+			Song.prototype.extended_profile = function(callback, options) {
+				var request = new Request(options, {id: this.name, bucket: ["song_hotttnesss", "audio_summary", "artist_familiarity", "artist_hotttnesss", "artist_location"]});
+				request.get(this.endPoint + 'profile', function(response) {
+					callback( new SongsCollection( response.getData() ) );
+				});
+			}
+			/**
+			 * Get search results for songs
+			 * @returns A collection object.
+			 */
+			Song.prototype.search = function(callback, options) {
+				var request = new Request(options, {});
+				request.get(this.endPoint + 'search', function(response) {
+					callback( new SongsCollection( response.getData() ) );
+				});
+			}
+			
 		
 		/**
 		 * Base class used for singular items returned from the API.
@@ -502,7 +541,7 @@
 		 * Inherits from Collection
 		 */
 		var SearchResultsCollection = function(data) {
-			var that = this;
+``			var that = this;
 			this.data = data;
 			this.name = "artists";
 			
