@@ -541,7 +541,7 @@
 		 * Inherits from Collection
 		 */
 		var SearchResultsCollection = function(data) {
-``			var that = this;
+			var that = this;
 			this.data = data;
 			this.name = "artists";
 			

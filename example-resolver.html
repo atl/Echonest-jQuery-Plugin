@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+
+<html>
+
+	<head>
+		<title>EchoNest JavaScript API</title>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		
+			<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.4.4.js" type="text/javascript"></script>
+			<script src="http://ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js" type="text/javascript"></script>
+			<script src="scripts/echonest.js" type="text/javascript"></script>
+
+			<script type="text/javascript">
+					$(document).ready(function() {
+						
+						var echonest = new EchoNest("6XTYROFV7PPT9ANMD");
+						$('.artist').each( function(index){
+						    var artist_id = $(this).attr("id");
+						    var that = this;
+						    echonest.artist(artist_id).profile( function(profile){
+						      $(that).html(profile.to_html("<em>${name}</em>"));
+						    });
+						  });
+						$('.song').each(function(index){
+						    var song_id = $(this).attr("id");
+						    var that = this;
+						    echonest.song(song_id).extended_profile(function(profile){
+						      $(that).html(profile.to_html("${artist_name} — ${title} (artist hotttnesss: <em>${artist_hotttnesss.toFixed(3)}</em>)"));
+						    });
+						  });
+						$('.songresolver').each(function(index){
+						    var search_string = $(this).attr("id");
+						    var that = this;
+						    echonest.song().search(function(searchResults){
+						      $(that).html(searchResults.to_html("${artist_name} — ${title}<br />"))},
+						      {combined: search_string, artist_min_familiarity: 0.4, results: 4})
+						  });
+					});
+		  </script>
+		<h3>Resolve artist names:</h3>
+		<div class="artist" id="ARH6W4X1187B99274F">ARH6W4X1187B99274F</div><br/>
+		<div class="artist" id="ARWA6NT1187FB3F15C">ARWA6NT1187FB3F15C</div>
+		<h3>Resolve song ids:</h3>
+		<div class="song" id="SOCZMFK12AC468668F">SOCZMFK12AC468668F</div><br/>
+		<div class="song" id="SOQQOWY12A8151E0B9">SOQQOWY12A8151E0B9</div>
+		<h3>Search for songs:</h3>
+		<div class="songresolver" id="Radiohead - My Iron Lung">"Radiohead - My Iron Lung"?</div><br/>
+		<div class="songresolver" id="Something">"Something"?</div>
+		
+		
+	</body>
+	
+</html>
